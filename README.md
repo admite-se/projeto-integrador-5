@@ -1,5 +1,11 @@
-# projeto-integrador-5
+# Admite-se!
 
-Códigos desenvolvidos para o projeto integrador 5
+Este é o repositório dos códigos das API's do Projeto Integrador V, do Curso de **Análise e Desenvolvimento de Sistemas** do **Centro Universitário Newton Paiva**, aplicativo **_Admite-se!_**.
 
-# Teste de push
+## Grupo composto por:
+
+- Adelvan Lima
+- Antônio Junio
+- Valdemir
+- Paulo
+- Sarah Araújo

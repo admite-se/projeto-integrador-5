@@ -1,0 +1,197 @@
+version: "3"
+
+services:
+  clientes-mysql:
+    image: mysql:5.7
+    container_name: clientes-mysql
+    volumes:
+      - clientes_data:/var/lib/mysql
+    restart: always
+    networks:
+      - admiteSe-network
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_clientes-123
+      MYSQL_DATABASE: clientes
+
+  vagas-mysql:
+    image: mysql:5.7
+    container_name: vagas-mysql
+    volumes:
+      - vagas_data:/var/lib/mysql
+    restart: always
+    networks:
+      - admiteSe-network
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_vagas-123
+      MYSQL_DATABASE: vagas
+
+  pagamentos-mysql:
+    image: mysql:5.7
+    container_name: pagamentos-mysql
+    volumes:
+      - pagamentos_data:/var/lib/mysql
+    restart: always
+    networks:
+      - admiteSe-network
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_pagamentos-123
+      MYSQL_DATABASE: pagamentos
+
+  notificacoes-mysql:
+    image: mysql:5.7
+    container_name: notificacoes-mysql
+    volumes:
+      - notificacoes_data:/var/lib/mysql
+    restart: always
+    networks:
+      - admiteSe-network
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_notificacoes-123
+      MYSQL_DATABASE: notificacoes
+
+  recomendacoes-mysql:
+    image: mysql:5.7
+    container_name: recomendacoes-mysql
+    volumes:
+      - recomendacoes_data:/var/lib/mysql
+    restart: always
+    networks:
+      - admiteSe-network
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_recomendacoes-123
+      MYSQL_DATABASE: recomendacoes
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: mrabbit
+    networks:
+      - rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia/
+    ports:
+      - 5672:5672
+      - 25676:25676
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  clientes-api:
+    build: "./clientes-api"
+    container_name: clientes-api
+    depends_on:
+      - clientes-mysql
+    volumes:
+      - ./clientes-api:/src
+    restart: always
+    command: node /src/app.js
+    networks:
+      - admiteSe-network
+    ports:
+      - "8081:8081"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_clientes-123
+      MYSQL_DATABASE: clientes
+
+  vagas-api:
+    build: "./vagas-api"
+    container_name: vagas-api
+    depends_on:
+      - vagas-mysql
+    volumes:
+      - ./vagas-api:/src
+    restart: always
+    command: node /src/app.js
+    networks:
+      - admiteSe-network
+    ports:
+      - "8082:8082"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_vagas-123
+      MYSQL_DATABASE: vagas
+
+  pagamentos-api:
+    build: "./pagamentos-api"
+    container_name: pagamentos-api
+    depends_on:
+      - pagamentos-mysql
+    volumes:
+      - ./pagamentos-api:/src
+    restart: always
+    command: node /src/app.js
+    networks:
+      - admiteSe-network
+      - rabbitmq
+    ports:
+      - "8083:8083"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_pagamentos-123
+      MYSQL_DATABASE: pagamentos
+      RABBIT_MQ_HOST: mrabbit
+      RABBIT_MQ_PORT: 5672
+      RABBIT_MQ_USER: guest
+      RABBIT_MQ_PASSWORD: guest
+
+  notificacoes-api:
+    build: "./notificacoes-api"
+    container_name: notificacoes-api
+    depends_on:
+      - notificacoes-mysql
+    volumes:
+      - ./notificacoes-api:/src
+    restart: always
+    command: node /src/app.js
+    networks:
+      - admiteSe-network
+      - rabbitmq
+    ports:
+      - "8084:8084"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_notificacoes-123
+      MYSQL_DATABASE: notificacoes
+      RABBIT_MQ_HOST: mrabbit
+      RABBIT_MQ_PORT: 5672
+      RABBIT_MQ_USER: guest
+      RABBIT_MQ_PASSWORD: guest
+
+  recomendacoes-api:
+    build: "./recomendacoes-api"
+    container_name: recomendacoes-api
+    depends_on:
+      - recomendacoes-mysql
+    volumes:
+      - ./recomendacoes-api:/src
+    restart: always
+    command: node /src/app.js
+    networks:
+      - admiteSe-network
+    ports:
+      - "8085:8085"
+    environment:
+      MYSQL_ROOT_PASSWORD: senha_da_api_de_recomendacoes-123
+      MYSQL_DATABASE: recomendacoes
+
+volumes:
+  clientes_data:
+  notificacoes_data:
+  pagamentos_data:
+  rabbitmq_data:
+  recomendacoes_data:
+  vagas_data:
+
+networks:
+  admiteSe-network:
+    driver: bridge
+  rabbitmq:
+    driver: bridge
