@@ -71,22 +71,6 @@ services:
       MYSQL_ROOT_PASSWORD: senha_da_api_de_recomendacoes-123
       MYSQL_DATABASE: recomendacoes
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: mrabbit
-    networks:
-      - rabbitmq
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq/mnesia/
-    ports:
-      - 5672:5672
-      - 25676:25676
-      - 15672:15672
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-
   clientes-api:
     build: "./clientes-api"
     container_name: clientes-api
@@ -132,16 +116,11 @@ services:
     command: node /src/app.js
     networks:
       - admiteSe-network
-      - rabbitmq
     ports:
       - "8083:8083"
     environment:
       MYSQL_ROOT_PASSWORD: senha_da_api_de_pagamentos-123
       MYSQL_DATABASE: pagamentos
-      RABBIT_MQ_HOST: mrabbit
-      RABBIT_MQ_PORT: 5672
-      RABBIT_MQ_USER: guest
-      RABBIT_MQ_PASSWORD: guest
 
   notificacoes-api:
     build: "./notificacoes-api"
@@ -154,16 +133,11 @@ services:
     command: node /src/app.js
     networks:
       - admiteSe-network
-      - rabbitmq
     ports:
       - "8084:8084"
     environment:
       MYSQL_ROOT_PASSWORD: senha_da_api_de_notificacoes-123
       MYSQL_DATABASE: notificacoes
-      RABBIT_MQ_HOST: mrabbit
-      RABBIT_MQ_PORT: 5672
-      RABBIT_MQ_USER: guest
-      RABBIT_MQ_PASSWORD: guest
 
   recomendacoes-api:
     build: "./recomendacoes-api"
@@ -186,12 +160,8 @@ volumes:
   clientes_data:
   notificacoes_data:
   pagamentos_data:
-  rabbitmq_data:
   recomendacoes_data:
   vagas_data:
 
 networks:
   admiteSe-network:
-    driver: bridge
-  rabbitmq:
-    driver: bridge
