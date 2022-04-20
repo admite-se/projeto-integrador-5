@@ -14,4 +14,20 @@ Este é o repositório dos códigos das API's do Projeto Integrador V, do Curso 
 
 Neste projeto, iremos implementar a seguinte arquitetura:
 
-![Arquitetura Proposta](https://github.com/admite-se/projeto-integrador-5-apis/blob/main/conteudos/arquitetura-proposta.png)
+<img style="" alt="arquitetura proposta" title="#" src=".github/arquitetura-proposta.png" />
+
+## Instalação e configuração do projeto
+
+**1 passo:** instalar o git na maquina
+
+**2 passo:** clonar repositorio: git clone
+
+**3 passo:** baixar o docker desktop: https://docs.docker.com/desktop/windows/install/
+
+**4 passo:** entrar no diretorio que foi clonado e abrir o terminal no caminho do diretorio e digitar: docker-compose up -d
+
+**5 passo:** conferir se as imagens esta listada no app do docker desktop
+
+**6 passo:** voltar ao terminal e digitar docker-compose run.
+
+**Observação:** _caso use Windows Home será necessário instalar o WSL2._
